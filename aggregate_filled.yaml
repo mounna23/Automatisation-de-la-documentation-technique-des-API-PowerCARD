@@ -1,0 +1,611 @@
+---
+KeyValueV35:
+  type: "object"
+  properties:
+    key:
+      type: "string"
+      example: ""
+    data:
+      type: "string"
+      example: ""
+    type:
+      type: "string"
+      example: ""
+ResponseInfo:
+  required:
+  - "responseUID"
+  - "resultID"
+  - "errorCode"
+  type: "object"
+  properties:
+    responseUID:
+      type: "string"
+      example: ""
+      description: "<p>Response Identifier. Echoed back by PowerCARD to the requester.\
+        \ It should contain the same value as the one sent in the request message.\
+        \ </p>"
+    resultID:
+      type: "string"
+      enum:
+      - "ProceedWithSuccess"
+      - "ProceedWithSuccessMC"
+      - "Error"
+      - "SystemError"
+      description: "<p>Refers to the result of processing in PowerCARD. The possible\
+        \ values are:<b> ProceedWithSuccess:<b> Call was ended successfully. ProceedWithSuccessMC:<b>\
+        \ Call made successfully, however the request will be inserted in a Maker\
+        \ Checker queue for further analysis. Error:<b> An error has occurred during\
+        \ the processing. SystemError:<b> An unknown system error occurred during\
+        \ the process. </p>"
+    errorCode:
+      type: "string"
+      example: ""
+      description: "<p>Indicate the error code used by the PowerCARD to tell you that\
+        \ program was experiencing a particular problem during the processing of the\
+        \ request.</p>"
+    errorDescription:
+      type: "string"
+      example: ""
+      description: "<p>If present, this field must contain the description of the\
+        \ error encountered</p>"
+RequestInfo:
+  required:
+  - "requestUID"
+  - "requestDate"
+  type: "object"
+  properties:
+    requestUID:
+      type: "string"
+      example: "firstUser01"
+      description: "<p>Request Identifier. It is sent by the calling system as a universally\
+        \ unique identifier for the message. Used to match response with request messages.\
+        \ The generation mask should be the following:<b> XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\
+        \ Example:<b> 6948DF80-14BD-4E04-8842-7668D9C001F5 </p>"
+    requestDate:
+      type: "string"
+      format: "date-time"
+      description: "<p>Date when the request was submitted</p>"
+    userID:
+      type: "string"
+      example: "firstUser"
+      description: "<p>Represents the user Id who made the request.</p>"
+RequestInfoCreateCorporate:
+  type: "object"
+  required:
+  - "requestUID"
+  - "requestDate"
+  properties:
+    requestUID:
+      type: "string"
+      maxLength: 36
+      description: "Request Identifier. It is sent by the calling system as a universally\
+        \ unique identifier for the message. Used to match response with request messages.\n\
+        \    <br>The generation mask should be the following:\n    <br>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\n\
+        \    <br>Example: \n    <br>6948DF80-14BD-4E04-8842-7668D9C001F5\n"
+      example: "12345678-90ab-cdef-1234-567890abcdef"
+    requestDate:
+      type: "string"
+      format: "date-time"
+      description: "Date when the request was submitted\n"
+    userID:
+      type: "string"
+      maxLength: 15
+      description: "Represents the user Id who made the request.\n"
+      example: "firstUser"
+CorporateDetailsCreateCorporate:
+  type: "object"
+  required:
+  - "corporateFinancialAssessment"
+  - "corporatedemographic"
+  - "corporateAddressList"
+  - "corporateContactList"
+  properties:
+    CorporateFinancialAssessment:
+      $ref: "aggregate.yaml#/CorporateFinancialAssessmentCreateCorporate"
+    Corporatedemographic:
+      $ref: "aggregate.yaml#/CorporatedemographicCreateCorporate"
+    CorporateAddressList:
+      $ref: "aggregate.yaml#/CorporateAddressListCreateCorporate"
+    CorporateDocumentList:
+      $ref: "aggregate.yaml#/CorporateDocumentListCreateCorporate"
+    CorporateCustomFieldList:
+      $ref: "aggregate.yaml#/CorporateCustomFieldListCreateCorporate"
+    CorporateContactList:
+      $ref: "aggregate.yaml#/CorporateContactListCreateCorporate"
+    AuthorizedSignatoryList:
+      $ref: "aggregate.yaml#/AuthorizedSignatoryListCreateCorporate"
+    EmployeePackSelectionList:
+      $ref: "aggregate.yaml#/EmployeePackSelectionListCreateCorporate"
+    EmployessProductSelectionList:
+      $ref: "aggregate.yaml#/EmployessProductSelectionListCreateCorporate"
+    CorporateAccountList:
+      $ref: "aggregate.yaml#/CorporateAccountListCreateCorporate"
+    CorporateAccountLinkList:
+      $ref: "aggregate.yaml#/CorporateAccountLinkListCreateCorporate"
+    PostingRuleList:
+      $ref: "aggregate.yaml#/PostingRuleListCreateCorporate"
+CorporateFinancialAssessmentCreateCorporate:
+  type: "object"
+  required:
+  - "nbrPans"
+  - "fiscalYearRangeDate"
+  - "currencyCode"
+  - "equityAmount"
+  properties:
+    nbrPans:
+      type: "string"
+      maxLength: 15
+      description: "Number of payment instruments that the corporate can issue.\n"
+      example: "1000"
+    FiscalYearRangeDate:
+      $ref: "aggregate.yaml#/FiscalYearRangeDateCreateCorporate"
+    currencyCode:
+      type: "string"
+      maxLength: 3
+      description: "Currency code\n"
+      example: "380"
+    equityAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "The paid-up share capital and its currency,\n"
+      example: "0"
+    reserveAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "This is the money set aside for a financial institution’s day-to-day\
+        \ operations, or for meeting emergency liquidity problems.\n"
+      example: "500000"
+    currentAssetsAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "These are all resources that a company can use in the current\
+        \ period to purchase new assets, pay debts and expenses, or convert into cash.\n"
+      example: ""
+    accumulatedLossesAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "The loss that the corporate keeps in its accounts from one accounting\
+        \ period to the next and adds to a new loss or takes away from a profit.\n"
+      example: "25"
+    totalDebtAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "The sum of all long-term liabilities and is identified on the\
+        \ corporate balance sheet (Loans and borrowings).\n"
+      example: "50"
+    inventoryAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "It is the value of corporates current assets including raw materials\
+        \ and work in progress and finished goods.\n"
+      example: ""
+    currentLiabilitiesAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "This is the payment that the corporate must make within 12 months.\n"
+      example: "123"
+    totNetWorthLiabilitiesAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "The Cash Profit / (Loss).\n"
+      example: "0"
+    grossProfitAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "It is the profit that the corporate makes after deducting the\
+        \ costs associated with making and selling its products, or the costs associated\
+        \ with providing its services\n"
+      example: "852"
+    netProfitAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "The money made by a corporate or part of a corporate for a particular\
+        \ period after all costs, taxes, etc. have been paid.\n"
+      example: "0"
+    costSalesAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "This is the amount that the corporate spends on manufacturing\
+        \ and selling products in a particular financial period, for example, on wages\
+        \ and raw materials.\n"
+      example: "0"
+    annualSalesAmount:
+      type: "string"
+      maxLength: "18,0"
+      description: "The annual revenue. It is the total amount of money made by the\
+        \ corporate in a given year before costs or expenses are taken out.\n"
+      example: "150000"
+FiscalYearRangeDateCreateCorporate:
+  type: "object"
+  required:
+  - "startDt"
+  - "endDt"
+  properties:
+    startDt:
+      type: "string"
+      format: "date-time"
+      description: "Start date for active or normal address status\n"
+    endDt:
+      type: "string"
+      format: "date-time"
+      description: "End date\n"
+CorporatedemographicCreateCorporate:
+  type: "object"
+  required:
+  - "corporateTypeCode"
+  - "corporateName"
+  - "branchCode"
+  - "activityCode"
+  - "customerSegment"
+  - "taxRegistryOffice"
+  - "taxNumber"
+  - "liabilityIndicator"
+  - "languageCode"
+  - "billingIndecator"
+  - "acceptCardIndecator"
+  - "applicationType"
+  - "contractElmentID"
+  - "embossingLine"
+  - "establishedDate"
+  properties:
+    corporateID:
+      type: "string"
+      maxLength: 15
+      description: "This is the corporate identification number. This field is required.\n"
+      example: ""
+    corporateTypeCode:
+      type: "string"
+      maxLength: 3
+      description: "Unique code identifying the corporate type.\n"
+      example: "SUB"
+    corporateName:
+      type: "string"
+      maxLength: 40
+      description: "This is the corporate name.\n"
+      example: "corporatemain"
+    corporateHostID:
+      type: "string"
+      maxLength: 15
+      description: "Identification number of the corporate in case the PowerCARD Application\
+        \ communicates with an external HOST system. As defined in ‘CLIENT’ table.\n"
+      example: "SAS"
+    hierarchyCode:
+      type: "string"
+      maxLength: 6
+      description: "Hierarchy code with which the corporate is subscribed/boarded.\
+        \ It must exist in 'CORP_HIERARCHY_PARAM' table.\n"
+      example: "CENTRA"
+    branchCode:
+      type: "string"
+      maxLength: 6
+      description: "Branch to which the corporate belongs. It should be defined in\
+        \ 'BRANCH’ table.\n"
+      example: "000002"
+    activityCode:
+      type: "string"
+      maxLength: 4
+      description: "This is to indicate the corporate client activity. It must be\
+        \ defined in ‘CLIENT_ACTIVITY_SET’ table.\n"
+      example: "0004"
+    customerSegment:
+      type: "string"
+      maxLength: 3
+      description: "This is to indicate the corporate, client segment. It must be\
+        \ defined in ‘CUSTOMER_SEGMENT’ table.\n"
+      example: "001"
+    taxRegistryOffice:
+      type: "string"
+      maxLength: 30
+      description: "Corporate tax registry office identification.\n"
+      example: "EFK1234"
+    taxNumber:
+      type: "string"
+      maxLength: 30
+      description: "Corporate tax number as taxpayer.\n"
+      example: "123456"
+    liabilityIndicator:
+      type: "string"
+      maxLength: 1
+      description: "Liability involved for the corporate.\n    <br>Possible values\
+        \ are:\n    <br>‘I’ = Individual (personal liability for corporate cards),\n\
+        \    <br>‘J’ = Joint (Both personal and corporate liability for corporate\
+        \ cards),\n    <br>‘F’ = Full (Corporation only is liable).\n"
+      example: "I"
+    languageCode:
+      type: "string"
+      maxLength: 3
+      description: "Corporate language code. It must be defined in ‘LANGUAGE_LIST’\
+        \ table.\n"
+      example: "ENG"
+    billingIndecator:
+      type: "string"
+      maxLength: 1
+      description: "This column indicates if an account is associated to this corporate\
+        \ or not.\n    <br>Possible values are:\n    <br>'C' = Centrally billed (there\
+        \ is an account associated to this corporate),\n    <br>'I' = Individually\
+        \ billed (Accounts will be associated to employee PANs).\n"
+      example: "C"
+    acceptCardIndecator:
+      type: "string"
+      maxLength: 1
+      description: "This column indicates if this corporate can issue directly the\
+        \ cards for their employees in other words if the cards can be linked directly\
+        \ to this corporate or not.\n    <br>Possible values are:\n    <br>'Y' = Yes,\n\
+        \    <br>'N' = No.\n"
+      example: "Y"
+    applicationId:
+      type: "string"
+      maxLength: 24
+      description: "The application identification number with which the client has\
+        \ been subscribed.\n"
+      example: ""
+    applicationType:
+      type: "string"
+      maxLength: 1
+      description: "This column indicates which type of application the user is capturing.\
+        \ As defined in 'APPLICATION_TYPE' table.\n"
+      example: "O"
+    applicationDate:
+      type: "string"
+      format: "date-time"
+      description: "Date of the application Boarding corporate (Set to the business\
+        \ date as default value).\n"
+    contractElmentID:
+      type: "string"
+      maxLength: 24
+      description: "The contract element id with which the corporate has been subscribed.\n"
+      example: "001"
+    ownerCode:
+      type: "string"
+      maxLength: 2
+      description: "This is to define the customer type. This owner code must be defined\
+        \ in‘OWNER_LIST’ table\n"
+      example: "01"
+    ownerCategory:
+      type: "string"
+      maxLength: 1
+      description: "Owner category. It must be defined in ‘OWNER_LIST’ table.\n"
+      example: "I"
+    increaseRate:
+      type: "string"
+      maxLength: 9
+      description: "The expected increase rate of stock inventory in terms of cards\
+        \ issued for the corporate on the subsequent year.\n"
+      example: ""
+    statementCode:
+      type: "string"
+      maxLength: 2
+      description: "Statement code. It should be defined in ‘STATEMENT_PARAMETERS’\
+        \ table.\n"
+      example: "S1"
+    socioProfessionalCode:
+      type: "string"
+      maxLength: 4
+      description: "Socio-professional category of the corporate. It should be present\
+        \ in the ‘SOCIOPROF_LIST’ table.\n"
+      example: "0047"
+    embossingLine:
+      type: "string"
+      maxLength: 40
+      description: "This is the corporate name that may be embossed on the corporate\
+        \ cards,\n"
+      example: "corporatemain"
+    establishedDate:
+      type: "string"
+      format: "date-time"
+      description: "This is to indicate date on which the Corporate product association\
+        \ contract has been established.\n"
+CorporateDocumentListCreateCorporate:
+  example:
+  - documentCode: "02"
+    documentId: "00123654"
+    documentIssueCity: "Milan"
+    documentIssueDate: "2006-06-27T00:00:00"
+    documentIssueCountry: "380"
+    documentExpiryDate: "2027-06-27T00:00:00"
+    mandatory: "Y"
+    provided: "Y"
+  - documentCode: "01"
+    documentId: "FK1231654"
+    documentIssueCity: "Milan"
+    documentIssueDate: "2006-06-27T00:00:00"
+    documentIssueCountry: "380"
+    documentExpiryDate: "2027-06-27T00:00:00"
+    mandatory: "Y"
+    provided: "Y"
+CorporateCustomFieldListCreateCorporate:
+  type: "array"
+  description: "List of Corporate Additional fields functionality which gives the\
+    \ possibility to capture extra fields required by the Institution\n"
+  items:
+    $ref: "aggregate.yaml#/CorporateCustomFieldListCreateCorporate"
+CorporateContactListCreateCorporate:
+  example:
+  - contactType: "BO"
+    employeeNumber: "AMAL1234"
+    firstName: "ACH"
+    familyName: "AMAL"
+    titleCode: "03"
+    nationalityCode: "380"
+    ownerShipeStatus: "O"
+    position: "Manager"
+    statusCode: "N"
+    statusDate: "2027-06-27T00:00:00"
+    emailAddress: "ach.amal@gmail.com"
+    phone1:
+      phoneType: "0"
+      phoneNumber: "0612457898"
+Phone1CreateCorporate:
+  type: "object"
+  required:
+  - "phoneType"
+  - "phone"
+  properties:
+    phoneType:
+      type: "string"
+      maxLength: 1
+      description: "Type of the phone number, possible values are:\n    <br>0 : Office\
+        \ phone\n    <br>1 : Office mobile phone\n    <br>2 : Home phone\n    <br>3\
+        \ : Personal mobile phone\n    <br>4 : Others\n"
+      example: "0"
+    phone:
+      type: "string"
+      maxLength: 20
+      description: "Where the contact can be reached at. The phone number must be\
+        \ formatted correctly based on the country policies.\n"
+      example: ""
+Phone2CreateCorporate:
+  type: "object"
+  required:
+  - "phoneType"
+  - "phone"
+  properties:
+    phoneType:
+      type: "string"
+      maxLength: 1
+      description: "Type of the phone number, possible values are:\n    <br>0 : Office\
+        \ phone\n    <br>1 : Office mobile phone\n    <br>2 : Home phone\n    <br>3\
+        \ : Personal mobile phone\n    <br>4 : Others\n"
+      example: "0"
+    phone:
+      type: "string"
+      maxLength: 20
+      description: "Where the contact can be reached at. The phone number must be\
+        \ formatted correctly based on the country policies.\n"
+      example: ""
+Phone3CreateCorporate:
+  type: "object"
+  required:
+  - "phoneType"
+  - "phone"
+  properties:
+    phoneType:
+      type: "string"
+      maxLength: 1
+      description: "Type of the phone number, possible values are:\n    <br>0 : Office\
+        \ phone\n    <br>1 : Office mobile phone\n    <br>2 : Home phone\n    <br>3\
+        \ : Personal mobile phone\n    <br>4 : Others\n"
+      example: "0"
+    phone:
+      type: "string"
+      maxLength: 20
+      description: "Where the contact can be reached at. The phone number must be\
+        \ formatted correctly based on the country policies.\n"
+      example: ""
+Phone4CreateCorporate:
+  type: "object"
+  required:
+  - "phoneType"
+  - "phone"
+  properties:
+    phoneType:
+      type: "string"
+      maxLength: 1
+      description: "Type of the phone number, possible values are:\n    <br>0 : Office\
+        \ phone\n    <br>1 : Office mobile phone\n    <br>2 : Home phone\n    <br>3\
+        \ : Personal mobile phone\n    <br>4 : Others\n"
+      example: "0"
+    phone:
+      type: "string"
+      maxLength: 20
+      description: "Where the contact can be reached at. The phone number must be\
+        \ formatted correctly based on the country policies.\n"
+      example: ""
+AuthorizedSignatoryListCreateCorporate:
+  example:
+  - employeNumber: "AK123"
+    legalIdentifier: "MN12365"
+    delegationAuthorityInd: "N"
+    titleCode: "01"
+    position: "PDG"
+    birthDate: "2025-06-27T00:00:00"
+    familyName: "YASSINE"
+    authorizedBy: "A"
+    firstName: "CHRIGUI"
+    statusCode: "N"
+    signingPower: "S0"
+    nationalityCode: "484"
+    authExpiryDate: "2025-06-27T00:00:00"
+    statusDate: "2025-06-27T00:00:00"
+  - employeNumber: "AK124"
+    legalIdentifier: "AK12365"
+    delegationAuthorityInd: "N"
+    titleCode: "01"
+    position: "ASSISTANTE"
+    birthDate: "2025-06-27T00:00:00"
+    familyName: "LAMIAE"
+    authorizedBy: "A"
+    firstName: "RAJAOUI"
+    statusCode: "N"
+    signingPower: "S0"
+    nationalityCode: "484"
+    authExpiryDate: "2025-06-27T00:00:00"
+    statusDate: "2025-06-27T00:00:00"
+EmployeePackSelectionListCreateCorporate:
+  type: "array"
+  description: "List of employee Pack selection\n"
+  items:
+    $ref: "aggregate.yaml#/EmployeePackSelectionListCreateCorporate"
+EmployessProductSelectionListCreateCorporate:
+  example:
+  - parentLevelAvailabilityInd: "Y"
+    currentLevelAvailabilityInd: "Y"
+    sublevelAvailabilityInd: "Y"
+    productCode: "PANAV1"
+    productType: "P"
+    productVersion: "1"
+CorporateAccountListCreateCorporate:
+  type: "array"
+  description: "Corporate Accounts\n"
+  items:
+    $ref: "aggregate.yaml#/CorporateAccountListCreateCorporate"
+CorporateAccountLinkListCreateCorporate:
+  example:
+  - accountNumber: "003"
+    postingDefaultFlag: "Y"
+    accountCurrency: "380"
+    iban: ""
+    swiftCode: ""
+    accountStatus: "C"
+    accountStatusReason: "1C"
+    accountStatusDate: "2026-06-27T00:00:00"
+ResponseInfoCreateCorporate:
+  type: "object"
+  required:
+  - "responseUID"
+  - "resultID"
+  - "errorCode"
+  properties:
+    responseUID:
+      type: "string"
+      maxLength: 36
+      description: "Response Identifier. Echoed back by PowerCARD to the requester.\
+        \ It should contain the same value as the one sent in the request message.\n"
+      example: ""
+    resultID:
+      type: "string"
+      enum:
+      - "ProceedWithSuccess"
+      - "ProceedWithSuccessMC"
+      - "Error"
+      - "SystemError"
+      description: "Refers to the result of processing in PowerCARD. \n    <br>The\
+        \ possible values are:\n    <br>§\_ ProceedWithSuccess: Call was ended successfully.\n\
+        \    <br>§\_ ProceedWithSuccessMC: Call made successfully, however the request\
+        \ will be inserted in a Maker Checker queue for further analysis.\n    <br>§\
+        \_ Error: An error has occurred during the processing.\n    <br>SystemError:\
+        \ An unknown system error occurred during the process.\n"
+      example: ""
+    errorCode:
+      type: "string"
+      maxLength: 5
+      description: "Indicate the error code used by the PowerCARD to tell you that\
+        \ program was experiencing a particular problem during the processing of the\
+        \ request.\n"
+      example: ""
+    errorDescription:
+      type: "string"
+      maxLength: 250
+      description: "If present, this field must contain the description of the error\
+        \ encountered\n"
+      example: ""

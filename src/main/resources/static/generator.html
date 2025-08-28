@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Générateur API</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #FF7F00 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: black;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Champ texte classique */
+        input[type="text"] {
+            margin-top: 5px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #FF7F00;
+            outline: none;
+        }
+
+        /* Bouton submit */
+        button {
+            margin-top: 15px;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #000000, #FF7F00);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #FF7F00, #000000);
+            transform: scale(1.05);
+        }
+
+        /* Champ fichier customisé */
+        input[type="file"] {
+            display: none;
+        }
+        .custom-file-label {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #FF7F00, #000000);
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+        .custom-file-label:hover {
+            background: linear-gradient(135deg, #000000, #FF7F00);
+            transform: scale(1.05);
+        }
+
+        /* Résultat */
+        #generateResult, #processResult, #processListResult {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f0f2f5;
+            white-space: pre-wrap;
+            transition: background 0.3s;
+        }
+        #generateResult.success, #processResult.success, #processListResult.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        #generateResult.error, #processResult.error, #processListResult.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Loader */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FF7F00;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1> Générateur API</h1>
+
+    <div class="card">
+        <h2> Upload & Génération</h2>
+        <form id="generateForm">
+            <label for="file" class="custom-file-label" id="fileLabel">Choisir un fichier...</label>
+            <input type="file" id="file" name="file" required>
+
+            <label for="apiRestrictedList">API Restricted List (optionnel) :</label>
+            <input type="text" id="apiRestrictedList" name="apiRestrictedList">
+
+            <label for="outputPath">Chemin sortie (obligatoire) :</label>
+            <input type="text" id="outputPath" name="outputPath" required>
+
+            <button type="submit">Générer <span id="loaderGenerate" class="loader" style="display:none;"></span></button>
+        </form>
+        <div id="generateResult"></div>
+    </div>
+
+    <div class="card">
+        <h2> Traitement YAML simple</h2>
+        <form id="processForm">
+            <label for="jsonPath">Chemin JSON :</label>
+            <input type="text" id="jsonPath" name="jsonPath" required>
+
+            <label for="yamlPath">Chemin YAML :</label>
+            <input type="text" id="yamlPath" name="yamlPath" required>
+
+            <label for="outputPathProcess">Fichier sortie :</label>
+            <input type="text" id="outputPathProcess" name="outputPath" value="aggregate_filled.yaml">
+
+            <button type="submit">Traiter <span id="loaderProcess" class="loader" style="display:none;"></span></button>
+        </form>
+        <div id="processResult"></div>
+    </div>
+
+    <div class="card">
+        <h2> Traitement YAML list</h2>
+        <form id="processListForm">
+            <label for="jsonPathList">Chemin JSON :</label>
+            <input type="text" id="jsonPathList" name="jsonPath" required>
+
+            <label for="yamlPathList">Chemin YAML :</label>
+            <input type="text" id="yamlPathList" name="yamlPath" required>
+
+            <label for="outputPathList">Fichier sortie :</label>
+            <input type="text" id="outputPathList" name="outputPath" value="aggregate_filled_list.yaml">
+
+            <button type="submit">Traiter List <span id="loaderList" class="loader" style="display:none;"></span></button>
+        </form>
+        <div id="processListResult"></div>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById("file");
+    const fileLabel = document.getElementById("fileLabel");
+    fileInput.addEventListener("change", () => {
+        if(fileInput.files.length > 0) {
+            fileLabel.textContent = fileInput.files[0].name;
+        } else {
+            fileLabel.textContent = "Choisir un fichier...";
+        }
+    });
+
+    function showResult(elementId, text, success = true) {
+        const el = document.getElementById(elementId);
+        el.innerText = text;
+        el.className = success ? "success" : "error";
+    }
+
+    // --- generate ---
+    document.getElementById("generateForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        document.getElementById("loaderGenerate").style.display = "inline-block";
+        let formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        formData.append("apiRestrictedList", document.getElementById("apiRestrictedList").value);
+        formData.append("outputPath", document.getElementById("outputPath").value);
+
+        try {
+            let response = await fetch("/api/generator/generate", { method: "POST", body: formData });
+            let text = await response.text();
+            showResult("generateResult", text, response.ok);
+        } catch (err) {
+            showResult("generateResult", err.message, false);
+        } finally {
+            document.getElementById("loaderGenerate").style.display = "none";
+        }
+    });
+
+    // --- process ---
+    document.getElementById("processForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        document.getElementById("loaderProcess").style.display = "inline-block";
+        let formData = new URLSearchParams();
+        formData.append("jsonPath", document.getElementById("jsonPath").value);
+        formData.append("yamlPath", document.getElementById("yamlPath").value);
+        formData.append("outputPath", document.getElementById("outputPathProcess").value);
+
+        try {
+            let response = await fetch("/api/generator/process", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            });
+            let text = await response.text();
+            showResult("processResult", text, response.ok);
+        } catch (err) {
+            showResult("processResult", err.message, false);
+        } finally {
+            document.getElementById("loaderProcess").style.display = "none";
+        }
+    });
+
+    // --- processlist ---
+    document.getElementById("processListForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        document.getElementById("loaderList").style.display = "inline-block";
+        let formData = new URLSearchParams();
+        formData.append("jsonPath", document.getElementById("jsonPathList").value);
+        formData.append("yamlPath", document.getElementById("yamlPathList").value);
+        formData.append("outputPath", document.getElementById("outputPathList").value);
+
+        try {
+            let response = await fetch("/api/generator/processlist", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            });
+            let text = await response.text();
+            showResult("processListResult", text, response.ok);
+        } catch (err) {
+            showResult("processListResult", err.message, false);
+        } finally {
+            document.getElementById("loaderList").style.display = "none";
+        }
+    });
+</script>
+
+</body>
+</html>
